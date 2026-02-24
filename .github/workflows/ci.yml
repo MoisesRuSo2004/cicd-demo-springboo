@@ -11,11 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Descargar el código
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Configurar Java 17
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -23,14 +21,23 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      # 3️⃣ Compilar y ejecutar pruebas
-      - name: Build and Test with Maven
+      # Ejecuta build + tests + cobertura
+      - name: Build and Test with Coverage
         run: mvn clean verify
 
-      # 4️⃣ Guardar reportes de pruebas
+      # Subir reportes de pruebas
       - name: Upload Surefire Reports
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-reports
           path: target/surefire-reports/
+
+      # Subir reporte JaCoCo
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: target/site/jacoco/
+          retention-days: 7
