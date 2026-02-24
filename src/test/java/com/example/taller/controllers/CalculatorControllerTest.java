@@ -16,27 +16,27 @@ class CalculatorControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void testSum() throws Exception {
+    void testSumWithNegativeNumbers() throws Exception {
         mockMvc.perform(get("/api/sum")
-                .param("a", "3")
-                .param("b", "4"))
+                .param("a", "-5")
+                .param("b", "3"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("7"));
+                .andExpect(content().string("-2"));
     }
 
     @Test
-    void testMultiply() throws Exception {
+    void testMultiplyWithZero() throws Exception {
         mockMvc.perform(get("/api/multiply")
-                .param("a", "3")
-                .param("b", "4"))
+                .param("a", "0")
+                .param("b", "5"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("12"));
+                .andExpect(content().string("0"));
     }
 
     @Test
-    void testHealthCheck() throws Exception {
-        mockMvc.perform(get("/api/health-check"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("OK"));
+    void testSumMissingParam() throws Exception {
+        mockMvc.perform(get("/api/sum")
+                .param("a", "5"))
+                .andExpect(status().isBadRequest());
     }
 }
